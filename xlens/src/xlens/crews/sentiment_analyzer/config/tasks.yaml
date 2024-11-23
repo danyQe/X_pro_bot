@@ -1,0 +1,6 @@
+sentiment_analysis_task:
+  description: >
+    Analyze the sentiment of the {tweet}  and classify them as positive, negative, or neutral.
+  agent: analyzer
+  expected_output: >
+    An overall  sentiment classification (positive, negative, neutral) with a confidence score and without the explanation .
