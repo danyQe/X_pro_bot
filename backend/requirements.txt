@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-dotenv
+crewai
+langchain
+langchain-openai
+python-multipart
+pydantic
+requests
+beautifulsoup4
+python-jose
+httpx
+langchain_groq

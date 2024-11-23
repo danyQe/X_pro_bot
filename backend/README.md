@@ -1,4 +1,3 @@
-# XLENS
 # Truth Terminal Backend
 
 This is the backend service for Truth Terminal, an AI-powered Twitter analysis platform.
