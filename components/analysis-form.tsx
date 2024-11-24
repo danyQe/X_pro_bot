@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,147 +12,170 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  tweetUrl: z.string().url("Please enter a valid URL"),
+  tweet: z.string().min(1, "Please enter a tweet text"),
 });
 
 export default function AnalysisForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [analysis, setAnalysis] = useState<any>(null);
+  const [activeAnalysis, setActiveAnalysis] = useState<"sentiment" | "facts" | "viral" | null>(null);
+  const [analysisResults, setAnalysisResults] = useState<{
+    sentiment?: { sentiment_description: string };
+    facts?: { Fact_description: string };
+    viral?: { viral_tweets: string[] };
+  }>({});
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      tweetUrl: "",
+      tweet: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  // components/analysis-form.tsx
+  // Update the analyzeTweet function
+  
+  const analyzeTweet = async (type: "sentiment" | "facts" | "viral") => {
     setIsLoading(true);
+    setActiveAnalysis(type);
+    
     try {
-      // In a real application, this would call your Python backend
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      let response;
+      if (type === "viral") {
+        response = await fetch("/api/viral");
+      } else {
+        response = await fetch(`/api/${type}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tweet: form.getValues("tweet") }),
+        });
+      }
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Analysis failed');
+      }
       
       const data = await response.json();
-      setAnalysis(data);
+      setAnalysisResults(prev => ({ ...prev, [type]: data }));
     } catch (error) {
-      console.error("Analysis failed:", error);
+      console.error(`${type} analysis failed:`, error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-8">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4">
           <FormField
             control={form.control}
-            name="tweetUrl"
+            name="tweet"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tweet URL</FormLabel>
+                <FormLabel>Tweet Text</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://twitter.com/..." {...field} />
+                  <Input placeholder="Enter tweet content..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing...
-              </>
-            ) : (
-              "Analyze Tweet"
-            )}
-          </Button>
+          <div className="flex gap-4">
+            <Button 
+              type="button" 
+              className="flex-1"
+              disabled={isLoading}
+              onClick={() => analyzeTweet("sentiment")}
+            >
+              {isLoading && activeAnalysis === "sentiment" ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                "Analyze Sentiment"
+              )}
+            </Button>
+            <Button 
+              type="button"
+              className="flex-1"
+              disabled={isLoading}
+              onClick={() => analyzeTweet("facts")}
+            >
+              {isLoading && activeAnalysis === "facts" ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Checking Facts...
+                </>
+              ) : (
+                "Check Facts"
+              )}
+            </Button>
+            <Button 
+              type="button"
+              className="flex-1"
+              disabled={isLoading}
+              onClick={() => analyzeTweet("viral")}
+            >
+              {isLoading && activeAnalysis === "viral" ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                "Generate Viral Tweets"
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
 
-      {analysis && (
-        <Tabs defaultValue="factCheck" className="w-full">
+      {Object.keys(analysisResults).length > 0 && (
+        <Tabs defaultValue={activeAnalysis || "sentiment"} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="factCheck">Fact Check</TabsTrigger>
             <TabsTrigger value="sentiment">Sentiment</TabsTrigger>
-            <TabsTrigger value="summary">Summary</TabsTrigger>
+            <TabsTrigger value="facts">Fact Check</TabsTrigger>
+            <TabsTrigger value="viral">Viral Tweets</TabsTrigger>
           </TabsList>
-          <TabsContent value="factCheck">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Fact Check Results</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span>Accuracy Score</span>
-                    <span>{analysis.factCheck.score}%</span>
-                  </div>
-                  <Progress value={analysis.factCheck.score} />
-                </div>
-                <div className="prose dark:prose-invert">
-                  <p>{analysis.factCheck.explanation}</p>
-                  {analysis.factCheck.sources && (
-                    <div className="mt-4">
-                      <h4 className="text-sm font-semibold">Sources:</h4>
-                      <ul className="list-disc pl-4">
-                        {analysis.factCheck.sources.map((source: string, index: number) => (
-                          <li key={index}>{source}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
+          
           <TabsContent value="sentiment">
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Sentiment Analysis</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span>Sentiment Score</span>
-                    <span>{analysis.sentiment.score}</span>
-                  </div>
-                  <Progress value={(analysis.sentiment.score + 1) * 50} />
-                </div>
-                <p>{analysis.sentiment.explanation}</p>
-              </div>
+              {analysisResults.sentiment && (
+                <p className="text-sm text-muted-foreground">
+                  {analysisResults.sentiment.sentiment_description}
+                </p>
+              )}
             </Card>
           </TabsContent>
-          <TabsContent value="summary">
+          
+          <TabsContent value="facts">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Content Summary</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {analysis.summary.text}
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-sm font-semibold mb-2">Key Points</h4>
-                  <ul className="list-disc pl-4 text-sm">
-                    {analysis.summary.keyPoints.map((point: string, index: number) => (
-                      <li key={index}>{point}</li>
-                    ))}
-                  </ul>
+              <h3 className="text-lg font-semibold mb-4">Fact Check Results</h3>
+              {analysisResults.facts && (
+                <p className="text-sm text-muted-foreground">
+                  {analysisResults.facts.Fact_description}
+                </p>
+              )}
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="viral">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Viral Tweet Suggestions</h3>
+              {analysisResults.viral && (
+                <div className="space-y-4">
+                  {analysisResults.viral.viral_tweets.map((tweet, index) => (
+                    <div 
+                      key={index}
+                      className="p-4 bg-secondary rounded-lg"
+                    >
+                      <p className="text-sm">{tweet}</p>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <h4 className="text-sm font-semibold mb-2">Topics</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.summary.topics.map((topic: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-xs"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              )}
             </Card>
           </TabsContent>
         </Tabs>
