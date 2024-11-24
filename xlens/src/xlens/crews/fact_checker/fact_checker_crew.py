@@ -1,7 +1,7 @@
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool
-from tools.twittertool import TwitterTool
+# from tools.twittertool import TwitterTool
 from dotenv import load_dotenv
 import os
 
@@ -17,15 +17,12 @@ llm = LLM(
 class FactCheckerCrew():
     """FactChecker crew"""
 
-    def __init__(self):
-        self.twitter_tool = TwitterTool()
-
     @agent
     def fact_checker(self) -> Agent:
         return Agent(
             llm=llm,
             config=self.agents_config['fact_checker'],
-            tools=[SerperDevTool(), self.twitter_tool],
+            tools=[SerperDevTool()],
             verbose=True,
             max_iter=2
         )

@@ -19,9 +19,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+tweet=""
 class SentimentState(BaseModel):
-    tweet: str
+    tweet: str=""
 
 class FactState(BaseModel):
     tweet: str = ""
@@ -29,13 +29,19 @@ class FactState(BaseModel):
 class SENTIMENTFlow(Flow[SentimentState]):
     @start()
     def do_Analysis(self):
-        result = SentimentAnalyzerCrew().crew().kickoff()
+        global tweet
+        inputs={"tweet":tweet}
+        print("tweet recieved:",tweet)
+        result = SentimentAnalyzerCrew().crew().kickoff(inputs=inputs)
         return result.raw
 
 class FACTFlow(Flow[FactState]):
     @start()
     def check_facts(self):
-        result = FactCheckerCrew().crew().kickoff()
+        global tweet
+        inputs = {"tweet": tweet}
+        print(f"Processing tweet: {tweet}")
+        result = FactCheckerCrew().crew().kickoff(inputs=inputs)
         return result.raw
 
 class VIRALFlow(Flow):
@@ -45,23 +51,23 @@ class VIRALFlow(Flow):
         return result.raw
 
 @app.post("/sentiment")
-async def sentiment_kickoff(data: SentimentState):
-    try:
-        sentiment_flow = SENTIMENTFlow()
-        sentiment_description = sentiment_flow.kickoff({"tweet": data.tweet})
-        result = sentiment_description
-        return {"sentiment_description": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def sentiment_kickoff(data: SentimentState):
+    print("tweet recieved:",data.tweet)
+    global tweet
+    tweet=data.tweet
+    sentiment_flow = SENTIMENTFlow()
+    return {"sentiment_description": sentiment_flow.kickoff()}
 
 @app.post("/facts")
-async def fact_kickoff(data: FactState):
+def fact_kickoff(data: FactState):
     fact_flow = FACTFlow()
-    fact_description = fact_flow.kickoff(inputs={"tweet": data.tweet})
-    return {"Fact_description": fact_description}
+    print(f"Received tweet: {data.tweet}")
+    global tweet
+    tweet=data.tweet
+    return {"Fact_description": fact_flow.kickoff()}
 
 @app.get("/viral")
-def viraltweetkickoff():
+def viral_tweet_kickoff():
     viral_flow = VIRALFlow()
     return {"viral_tweets": viral_flow.kickoff()}
 

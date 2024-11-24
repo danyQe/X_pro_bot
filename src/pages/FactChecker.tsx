@@ -14,8 +14,23 @@ function FactChecker() {
       const response = await axios.post('http://localhost:8000/facts', { tweet });
       setResult(response.data.Fact_description);
     } catch (error) {
-      console.error('Error:', error);
-      setResult('Error checking facts. Please try again.');
+      if (axios.isAxiosError(error)) {
+        console.error('Axios Error:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
+        if (error.response?.data?.detail?.includes("CrewOutput")) {
+          setResult("The fact-checking service is currently unavailable. Please try again in a few moments.");
+        } else if (error.response?.status === 500) {
+          setResult('Server error occurred. Please try again later.');
+        } else {
+          setResult(`Error: ${error.response?.data?.detail || error.message}`);
+        }
+      } else {
+        console.error('Unexpected Error:', error);
+        setResult('An unexpected error occurred. Please try again.');
+      }
     }
     setLoading(false);
   };
