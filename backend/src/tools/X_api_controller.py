@@ -1,5 +1,13 @@
 import tweepy
 class TwitterAPIController:
+    """
+    Handles interaction with Twitter for actions 
+    like reading 
+    tweets, 
+    replying, 
+    retweeting, 
+    and liking using tweepy
+    """
     def __init__(self, consumer_key, consumer_secret, access_token, access_token_secret):
         """
         Initialize the Twitter API controller.
