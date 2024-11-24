@@ -38,14 +38,14 @@ if exist requirements.txt (
     exit /b
 )
 
-:: Ask the user if they want to run the project
-set /p RUN_PROJECT="Do you want to run the project now? (y/n): "
-if /i "%RUN_PROJECT%"=="y" (
-    echo Running the project...
-    venv\Scripts\python main.py
-) else (
-    echo Skipping project execution.
-)
+@REM :: Ask the user if they want to run the project
+@REM set /p RUN_PROJECT="Do you want to run the project now? (y/n): "
+@REM if /i "%RUN_PROJECT%"=="y" (
+@REM     echo Running the project...
+@REM     venv\Scripts\python main.py
+@REM ) else (
+@REM     echo Skipping project execution.
+@REM )
 
 :: Pause at the end
 pause

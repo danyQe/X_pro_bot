@@ -1,0 +1,6 @@
+fact_checking_task:
+  description: >
+    Verify claims made in these {tweet} using reliable sources, and provide a fact-checked response with supporting references.
+  agent: fact_checker
+  expected_output: >
+    A fact-checking result (True, False, Partially True) with links to supporting references.
