@@ -7,6 +7,15 @@ IF ERRORLEVEL 1 (
     exit /b
 )
 
+:: Check if Node.js is installed
+node --version >nul 2>&1
+IF ERRORLEVEL 1 (
+    echo Node.js is not installed. Please install Node.js and try again.
+    exit /b
+)
+
+echo Setting up backend...
+
 :: Check if the virtual environment folder exists
 if not exist venv (
     echo Virtual environment not found. Creating a new one...
@@ -25,12 +34,12 @@ if ERRORLEVEL 1 (
     exit /b
 )
 
-:: Install dependencies
+:: Install backend dependencies
 if exist requirements.txt (
-    echo Installing dependencies from requirements.txt...
+    echo Installing backend dependencies from requirements.txt...
     venv\Scripts\python -m pip install -r requirements.txt
     if ERRORLEVEL 1 (
-        echo Failed to install dependencies.
+        echo Failed to install backend dependencies.
         exit /b
     )
 ) else (
@@ -38,14 +47,30 @@ if exist requirements.txt (
     exit /b
 )
 
-:: Ask the user if they want to run the project
-set /p RUN_PROJECT="Do you want to run the project now? (y/n): "
-if /i "%RUN_PROJECT%"=="y" (
-    echo Running the project...
-    venv\Scripts\python main.py
-) else (
-    echo Skipping project execution.
+:: Run backend
+echo Starting backend server...
+start venv\Scripts\python xlens.src.xlens.main.py
+
+echo Setting up frontend...
+
+:: Install frontend dependencies
+echo Installing frontend dependencies...
+npm install
+if ERRORLEVEL 1 (
+    echo Failed to install frontend dependencies.
+    exit /b
 )
 
-:: Pause at the end
+:: Run npm audit fix
+echo Running npm audit fix...
+npm audit fix
+if ERRORLEVEL 1 (
+    echo Warning: npm audit fix encountered issues
+)
+
+:: Start frontend development server
+echo Starting frontend development server...
+start npm run dev
+
+echo Setup complete! Both frontend and backend servers should be starting...
 pause

@@ -1,0 +1,33 @@
+viral_content_research:
+  description: >
+    Research and analyze current trending topics using Google Trends, news websites, and social media platforms.
+    Focus on topics that have high viral potential and are relevant to our target audience.
+    Provide detailed context and engagement metrics for each topic.
+  expected_output: >
+    A detailed analysis of the top trending topics including:
+    - Topic name and description
+    - Current engagement metrics
+    - Key hashtags and related terms
+    - Potential viral angles
+  agent: content_researcher
+
+viral_content_tweet:
+  description: >
+    Using the research provided, create compelling tweets that have high viral potential.
+    Each tweet should:
+    - Be optimized for engagement
+    - Include relevant hashtags
+    - Follow Twitter best practices
+    - Have a clear hook or call-to-action
+  expected_output: >
+    A set of optimized tweets with:
+    - Main tweet content
+    - Relevant hashtags
+    - Engagement prediction score
+  agent: tweet_writer
+
+viral_content_tweet_posting:
+  description: >
+    Present the generated tweets to the user and request confirmation before posting them on Twitter. Only proceed with posting after explicit user approval.
+  expected_output: >
+    A preview of the tweets to be posted, followed by user confirmation status and, if approved, a confirmation message indicating successful posting.
