@@ -246,11 +246,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Create a `.env` file in your project root and add the following API keys:
 
 ```bash
-# OpenAI API Key (Required)
-OPENAI_API_KEY=your_openai_api_key
-
-# Alternative LLM Providers
-GROQ_API_KEY=your_groq_api_key
+# LLM Provider(required)
 GEMINI_API_KEY=your_gemini_api_key
 
 # Twitter/X API Credentials
