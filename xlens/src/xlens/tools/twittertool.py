@@ -1,4 +1,4 @@
-from crewai_tools import tool
+from crewai_tools import BaseTool
 import tweepy
 import os
 from typing import List, Optional, Dict, Any
@@ -7,49 +7,63 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class TwitterTool:
-    """Twitter API tool for CrewAI agents"""
-    
-    def __init__(self):
-        """Initialize Twitter API clients"""
-        # Client for app-only authentication (trending topics)
-        self.client = tweepy.Client(
-            bearer_token=os.getenv("TWITTER_BEARER_TOKEN"),
-            consumer_key=os.getenv("TWITTER_API_KEY"),
-            consumer_secret=os.getenv("TWITTER_API_SECRET"),
-            access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
-            access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
-            wait_on_rate_limit=True
-        )
+    name: str = "Twitter Tool"
+    description: str = "Tool for interacting with Twitter API"
 
-    @tool("Tweet Publisher")
-    def publish_tweet(self, text: str, reply_to_tweet_id: Optional[str] = None) -> Dict[str, Any]:
-        """Publishes a tweet to Twitter/X
+    def __init__(self):
+        """Initialize Twitter API client with v2 endpoints"""
+        super().__init__()
         
+        # Load environment variables with exact names matching Twitter's documentation
+        required_credentials = {
+            "X_BEARER_TOKEN": os.getenv("X_BEARER_TOKEN"),
+            "X_API_KEY": os.getenv("X_API_KEY"),
+            "X_API_KEY_SECRET": os.getenv("X_API_KEY_SECRET"),
+            "X_ACCESS_TOKEN": os.getenv("X_ACCESS_TOKEN"),
+            "X_ACCESS_TOKEN_SECRET": os.getenv("X_ACCESS_TOKEN_SECRET")
+        }
+        
+        missing_credentials = [key for key, value in required_credentials.items() if not value]
+        if missing_credentials:
+            raise ValueError(f"Missing required Twitter credentials: {', '.join(missing_credentials)}")
+
+        try:
+            # Initialize v2 Client with proper credential names
+            self.client = tweepy.Client(
+                bearer_token=required_credentials["X_BEARER_TOKEN"],
+                consumer_key=required_credentials["X_API_KEY"],
+                consumer_secret=required_credentials["X_API_KEY_SECRET"],
+                access_token=required_credentials["X_ACCESS_TOKEN"],
+                access_token_secret=required_credentials["X_ACCESS_TOKEN_SECRET"],
+                wait_on_rate_limit=True
+            )
+            if not self.client:
+                raise Exception("Failed to initialize Twitter client")
+        except Exception as e:
+            print(f"Error initializing Twitter client: {str(e)}")
+            raise
+
+    def post_tweet(self, text: str) -> dict:
+        """
+        Post a tweet using Twitter API v2
         Args:
-            text: The text content of the tweet (max 280 characters)
-            reply_to_tweet_id: Optional ID of tweet to reply to
-        
+            text (str): The text content of the tweet
         Returns:
-            Dictionary containing tweet data including ID and text
+            dict: Response containing success status and data/error
         """
         try:
-            response = self.client.create_tweet(
-                text=text,
-                in_reply_to_tweet_id=reply_to_tweet_id
-            )
-            
+            # Use v2 create_tweet method
+            response = self.client.create_tweet(text=text)
             return {
                 "success": True,
-                "tweet_id": response.data["id"],
-                "tweet_text": text
+                "data": response
             }
         except Exception as e:
             return {
                 "success": False,
-                "error": str(e)
+                "error": f"Twitter API error: {str(e)}"
             }
-    
-    @tool("Trending Topics Analyzer")
+
     def analyze_trends(self, woeid: int = 1, exclude_hashtags: bool = False) -> Dict[str, Any]:
         """Gets trending topics for a specific location
         

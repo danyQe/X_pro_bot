@@ -41,4 +41,5 @@ class FactCheckerCrew():
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
+            memory=True
         )
