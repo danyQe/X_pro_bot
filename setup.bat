@@ -49,7 +49,7 @@ if exist requirements.txt (
 
 :: Run backend
 echo Starting backend server...
-start venv\Scripts\python xlens.src.xlens.main.py
+start uvicorn xlens.src.xlens.main:app --reload
 
 echo Setting up frontend...
 
@@ -71,7 +71,6 @@ if ERRORLEVEL 1 (
 :: Start frontend development server
 echo Starting frontend development server...
 start npm run dev
-start ""http://localhost:5173
 
 echo Setup complete! Both frontend and backend servers should be starting...
 pause
