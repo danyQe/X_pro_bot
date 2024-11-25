@@ -204,6 +204,7 @@ app.add_middleware(
 - uvicorn
 - crewai
 - pydantic
+- Tweepy
 
 ### Frontend Dependencies
 Reference to package.json:
