@@ -5,3 +5,4 @@ crewai
 crewai[tools]
 pydantic
 tweepy
+google-generativeai

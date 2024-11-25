@@ -24,16 +24,21 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/XLENS.git
+git clone https://github.com/danyQe/XLENS.git
 cd XLENS
 ```
 
 ### 2. Automated Setup (Windows)
 
-Run the setup batch file:
+Run the setup batch file in cmd:
 
 ```bash
 setup.bat
+```
+Automated setup for Linux and MacOS :
+
+```bash
+setup.sh
 ```
 
 Reference to setup script:

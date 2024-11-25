@@ -71,6 +71,7 @@ if ERRORLEVEL 1 (
 :: Start frontend development server
 echo Starting frontend development server...
 start npm run dev
+start ""http://localhost:5173
 
 echo Setup complete! Both frontend and backend servers should be starting...
 pause
