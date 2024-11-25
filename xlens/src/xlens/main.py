@@ -34,8 +34,8 @@ class SENTIMENTFlow(Flow[SentimentState]):
         inputs={"tweet":tweet}
         print("tweet recieved:",tweet)
         result = SentimentAnalyzerCrew().crew().kickoff(inputs=inputs)
-        Tweet=result.pydantic
-        return Tweet.tweet[0]
+        Tweet=result.raw
+        return Tweet
 
 class FACTFlow(Flow[FactState]):
     @start()
