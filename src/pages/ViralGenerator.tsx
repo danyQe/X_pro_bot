@@ -49,8 +49,8 @@ function ViralGenerator() {
     <div className="max-w-3xl mx-auto px-4 py-12">
       <div className="text-center mb-8">
         <Sparkles className="h-12 w-12 text-purple-500 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Viral Thread Generator</h1>
-        <p className="text-gray-600">Create engaging tweet threads that go viral</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Viral Tweet Generator</h1>
+        <p className="text-gray-600">Create engaging tweets that go viral</p>
       </div>
 
       <div className="text-center">
@@ -62,7 +62,7 @@ function ViralGenerator() {
           {loading ? (
             <>
               <Loader2 className="animate-spin h-5 w-5 mr-2" />
-              Generating Thread...
+              Generating Tweets...
             </>
           ) : (
             'Generate Viral Thread'

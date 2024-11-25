@@ -22,8 +22,8 @@ function Home() {
     },
     {
       icon: <Sparkles className="h-8 w-8 text-purple-500" />,
-      title: 'Viral Thread Generator',
-      description: 'Create engaging viral-worthy tweet threads',
+      title: 'Viral Tweet Generator',
+      description: 'Create engaging viral-worthy tweets',
       path: '/viral',
       color: 'bg-purple-50 hover:bg-purple-100',
     },
