@@ -195,7 +195,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 ```
-
+## Demo 🎥
+[![Watch the demo](https://img.youtube.com/vi/0e4GoAZbyYA/0.jpg)](https://www.youtube.com/watch?v=0e4GoAZbyYA)
 
 ## 📦 Dependencies
 
