@@ -238,4 +238,56 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Special thanks to all contributors
 
 ---
+
+
+
+### Setting Up API Credentials
+
+Create a `.env` file in your project root and add the following API keys:
+
+```bash
+# OpenAI API Key (Required)
+OPENAI_API_KEY=your_openai_api_key
+
+# Alternative LLM Providers
+GROQ_API_KEY=your_groq_api_key
+GEMINI_API_KEY=your_gemini_api_key
+
+# Twitter/X API Credentials
+X_BEARER_TOKEN=your_bearer_token
+X_API_KEY=your_api_key
+X_API_KEY_SECRET=your_api_key_secret
+X_ACCESS_TOKEN=your_access_token
+X_ACCESS_TOKEN_SECRET=your_access_token_secret
+X_CLIENT_ID=your_client_id
+X_CLIENT_SECRET=your_client_secret
+
+# Search API
+SERPER_API_KEY=your_serper_api_key
+```
+
+To obtain these API keys:
+
+1. **Gemini API Key**: 
+   - Visit [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key)
+   - Create a new API key in your project
+   - Copy the API key and paste it as the `GEMINI_API_KEY` value
+
+2. **Twitter/X Credentials**:
+   - Go to the [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard)
+   - Create a new project and app
+   - Under "User authentication settings", enable OAuth 1.0a and OAuth 2.0
+   - Generate the following from your app settings:
+     * API Key and Secret (`X_API_KEY` and `X_API_KEY_SECRET`)
+     * Access Token and Secret (`X_ACCESS_TOKEN` and `X_ACCESS_TOKEN_SECRET`)
+     * Client ID and Secret (`X_CLIENT_ID` and `X_CLIENT_SECRET`)
+     * Bearer Token (`X_BEARER_TOKEN`)
+
+3. **Serper API Key**:
+   - Sign up at [Serper.dev](https://serper.dev)
+   - Navigate to your dashboard
+   - Copy your API key and paste it as the `SERPER_API_KEY` value
+
+> ⚠️ **Important**: Never commit your `.env` file to version control. Make sure it's listed in your `.gitignore` file.
+
 Made with ❤️ by XLENS team
