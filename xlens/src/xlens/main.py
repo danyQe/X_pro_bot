@@ -12,9 +12,25 @@ from xlens.src.xlens.crews.sentiment_analyzer.sentiment_analyzer_crew import Sen
 from xlens.src.xlens.crews.viral_tweet_generator.viral_tweet_generator_crew import ViralTweetGeneratorCrew
 
 app = FastAPI(title="XLENS", description="APP for X Sentiment Analysis, Fact Checking, and Viral Thread Generation")
+<<<<<<< Updated upstream
 app.mount("/",StaticFiles(directory=r"C:\Users\HP\Desktop\PROJECTS\BUILDATHON\X_LENS_TEST\xlens\static",html=True),name="static")
 class sentimentstate(BaseModel):
     tweet:str=""
+=======
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Vite's default port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+tweet=""
+class SentimentState(BaseModel):
+    tweet: str=""
+
+>>>>>>> Stashed changes
 class FactState(BaseModel):
     tweet:str=""
 

@@ -33,6 +33,7 @@ class FactCheckerCrew():
 	# 		verbose=True
 	# 	)
 
+<<<<<<< Updated upstream
 	@task
 	def fact_check(self) -> Task:
 		return Task(
@@ -56,3 +57,14 @@ class FactCheckerCrew():
 			verbose=True,
 			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
 		)
+=======
+    @crew
+    def crew(self) -> Crew:
+        """Creates the FactChecker crew"""
+        return Crew(
+            agents=self.agents,
+            tasks=self.tasks,
+            process=Process.sequential,
+            verbose=True
+        )
+>>>>>>> Stashed changes
