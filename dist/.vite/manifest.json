@@ -1,0 +1,44 @@
+{
+  "../../../../../../@crx/manifest": {
+    "file": "crx-manifest.js.CH07Xz_Z.js",
+    "name": "crx-manifest.js",
+    "src": "../../../../../../@crx/manifest",
+    "isEntry": true
+  },
+  "_main.!~{003}~.js": {
+    "file": "main.BexawPMd.css",
+    "src": "_main.!~{003}~.js"
+  },
+  "_main.Cv9iMstk.js": {
+    "file": "main.Cv9iMstk.js",
+    "name": "main",
+    "css": [
+      "main.BexawPMd.css"
+    ]
+  },
+  "contentScript.ts-loader.js": {
+    "file": "contentScript.ts-loader.CH7ikJUP.js",
+    "src": "contentScript.ts-loader.js"
+  },
+  "index.html": {
+    "file": "index.html.Dw_Fdwci.js",
+    "name": "index.html",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_main.Cv9iMstk.js"
+    ]
+  },
+  "src/background.ts": {
+    "file": "background.ts.dp6HUW8K.js",
+    "name": "background.ts",
+    "src": "src/background.ts",
+    "isEntry": true
+  },
+  "src/contentScript.ts": {
+    "file": "contentScript.ts.EPwlJMeo.js",
+    "name": "contentScript.ts",
+    "src": "src/contentScript.ts",
+    "isEntry": true
+  }
+}

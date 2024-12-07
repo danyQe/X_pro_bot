@@ -1,0 +1,17 @@
+.xlens-button {
+    background: #1da1f2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin: 8px;
+    cursor: pointer;
+  }
+  
+  .xlens-result {
+    background: #f8f9fa;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px;
+  }

@@ -1,0 +1,43 @@
+{
+    "manifest_version": 3,
+    "name": "XLENS",
+    "version": "1.0.0",
+    "description": "AI-powered Twitter analysis toolkit for fact-checking, sentiment analysis, and viral thread generation",
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": {
+        "16": "src/assets/icon16.png",
+        "48": "src/assets/icon48.png",
+        "128": "src/assets/icon128.png"
+      }
+    },
+    "icons": {
+      "16": "src/assets/icon16.png",
+      "48": "src/assets/icon48.png",
+      "128": "src/assets/icon128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://twitter.com/*", "https://x.com/*"],
+        "js": ["src/contentScript.ts"],
+        "css": ["src/content.css"]
+      }
+    ],
+    "background": {
+      "service_worker": "src/background.ts",
+      "type": "module"
+    },
+    "host_permissions": [
+      "http://*.twitter.com/*",
+      "http://*.x.com/*"
+    ],
+    "web_accessible_resources": [{
+      "resources": ["src/assets/*"],
+      "matches": ["https://twitter.com/*", "https://x.com/*"]
+    }]
+  }
